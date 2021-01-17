@@ -85,10 +85,7 @@
       setTimeout(() => {
         timeUp = true;
         startButton.removeAttribute("disabled", "disabled");
-        if (highScoreCount.textContent < scoreBoard.textContent) {
-          // console.log(highScoreCount.textContent);
-          // console.log(scoreBoard.textContent);
-          // console.log(highScoreCount.textContent < scoreBoard.textContent);
+        if ((+highScoreCount.textContent) < (+scoreBoard.textContent)) {
           highScoreCount.textContent = scoreBoard.textContent;
           localStorage.setItem('count', highScoreCount.textContent);
         }
