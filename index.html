@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Whack A Mole!</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>Whack-a-mole! <span class="score">0</span> </h1>
+  <h2><span class="highScore">High Score</span> <span id="highScoreCount" class="highScoreCount">0</span><span> pts /
+      Level</span> <span id="level">1</span> </h2>
+  <button id="start" onClick="startGame()">Start!</button>
+
+  <div class="game">
+    <div class="hole hole1">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole2">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole3">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole4">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole5">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole6">
+      <div class="mole"></div>
+    </div>
+  </div>
+
+  <script>
+    const holes = document.querySelectorAll('.hole');
+    const scoreBoard = document.querySelector('.score');
+    const moles = document.querySelectorAll('.mole');
+    const highScoreCount = document.querySelector('#highScoreCount');
+    let level = document.querySelector('#level');
+
+    const startButton = document.querySelector('#start');
+
+    let lastHole;
+    let timeUp = false;
+    let count = 0;
+
+    let lvl = level.textContent;
+    
+    function randomTime(min, max) {
+      return (Math.floor(Math.random() * (max - min) + min));
+    }
+
+    function randomHole(holes) {
+      const currentHole = holes[Math.floor(Math.random() * holes.length)];
+      if (lastHole === currentHole) {
+        return randomHole(holes);
+      }
+      lastHole = currentHole;
+      return currentHole;
+    }
+
+    function moleUp() {
+      const time = randomTime(1000/lvl, 2000/lvl);
+      const hole = randomHole(holes);
+      hole.classList.add('up');
+      setTimeout(() => {
+        hole.classList.remove('up');
+        if (!timeUp) {
+          moleUp();
+        }
+      }, time);
+    }
+
+    function startGame() {
+      scoreBoard.textContent = 0;
+      timeUp = false;
+      startButton.setAttribute("disabled", "disabled");
+      moleUp();
+
+      setTimeout(() => {
+        timeUp = true;
+        startButton.removeAttribute("disabled", "disabled");
+        if ((+highScoreCount.textContent) < (+scoreBoard.textContent)) {
+          highScoreCount.textContent = scoreBoard.textContent;
+          localStorage.setItem('count', highScoreCount.textContent);
+        }
+        scoreBoard.textContent = 0;
+        count = 0;
+        level.textContent = ++lvl;  
+      }, 10000/lvl);
+    }
+
+    function goal() {
+      scoreBoard.textContent = ++count;
+    }
+
+    moles.forEach(mole => mole.addEventListener('click', goal));
+
+  </script>
+</body>
+
+</html>
