@@ -48,9 +48,10 @@
     let lastHole;
     let timeUp = false;
     let count = 0;
+    highScoreCount.textContent = localStorage.getItem('count', highScoreCount.textContent);
 
     let lvl = level.textContent;
-    
+
     function randomTime(min, max) {
       return (Math.floor(Math.random() * (max - min) + min));
     }
@@ -65,7 +66,7 @@
     }
 
     function moleUp() {
-      const time = randomTime(1000/lvl, 2000/lvl);
+      const time = randomTime(1000 / lvl, 2000 / lvl);
       const hole = randomHole(holes);
       hole.classList.add('up');
       setTimeout(() => {
@@ -91,8 +92,8 @@
         }
         scoreBoard.textContent = 0;
         count = 0;
-        level.textContent = ++lvl;  
-      }, 10000/lvl);
+        level.textContent = ++lvl;
+      }, 10000 / lvl);
     }
 
     function goal() {
