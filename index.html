@@ -41,16 +41,17 @@
     const scoreBoard = document.querySelector('.score');
     const moles = document.querySelectorAll('.mole');
     const highScoreCount = document.querySelector('#highScoreCount');
-    let level = document.querySelector('#level');
-
+    const level = document.querySelector('#level');
     const startButton = document.querySelector('#start');
 
     let lastHole;
-    let timeUp = false;
+    let isTimeFinished = false;
     let count = 0;
-    highScoreCount.textContent = localStorage.getItem('count', highScoreCount.textContent);
+    let lvl = 1;
+    let highScoreNumber = +localStorage.getItem('count') || 0;
+    let scoreBoardNumber = 0;
 
-    let lvl = level.textContent;
+    highScoreCount.textContent = highScoreNumber;
 
     function randomTime(min, max) {
       return (Math.floor(Math.random() * (max - min) + min));
@@ -71,33 +72,35 @@
       hole.classList.add('up');
       setTimeout(() => {
         hole.classList.remove('up');
-        if (!timeUp) {
+        if (!isTimeFinished) {
           moleUp();
         }
       }, time);
     }
 
     function startGame() {
-      scoreBoard.textContent = 0;
-      timeUp = false;
+      isTimeFinished = false;
       startButton.setAttribute("disabled", "disabled");
       moleUp();
 
       setTimeout(() => {
-        timeUp = true;
+        isTimeFinished = true;
         startButton.removeAttribute("disabled", "disabled");
-        if ((+highScoreCount.textContent) < (+scoreBoard.textContent)) {
-          highScoreCount.textContent = scoreBoard.textContent;
-          localStorage.setItem('count', highScoreCount.textContent);
+        if (highScoreNumber < scoreBoardNumber) {
+          highScoreNumber = scoreBoardNumber;
+          highScoreCount.textContent = highScoreNumber;
+          localStorage.setItem('count', highScoreNumber);
         }
-        scoreBoard.textContent = 0;
-        count = 0;
+        
         level.textContent = ++lvl;
       }, 10000 / lvl);
     }
 
     function goal() {
-      scoreBoard.textContent = ++count;
+      if (!isTimeFinished) {
+        scoreBoardNumber += 1;
+        scoreBoard.textContent = scoreBoardNumber; 
+      }
     }
 
     moles.forEach(mole => mole.addEventListener('click', goal));
